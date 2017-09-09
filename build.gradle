@@ -11,4 +11,10 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'com.sparkjava:spark-core:2.5'
+    compile 'com.sparkjava:spark-template-freemarker:2.3'
+    compile 'org.freemarker:freemarker:2.3.23'
+    compile 'com.sparkjava:spark-debug-tools:0.5'
+    runtime 'org.slf4j:slf4j-simple:1.7.21'
+    compile group: 'org.webjars', name: 'bootstrap', version: '3.2.0'
 }
