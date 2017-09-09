@@ -5,31 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8">
     <title>Practica 8</title>
 
+
     <link rel="stylesheet" href="/CSS/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/CSS/font-awesome.min.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,600|Raleway:600,300|Josefin+Slab:400,700,600italic,600,400italic' rel='stylesheet' type='text/css'>
-
-    <script href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
-    <script href="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
-    <script  src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-
-
     <script src="/JS/jquery.min.js"></script>
+    <script href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+
+
+
+
     <script href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <script src="/JS/bootstrap.min.js"></script>
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDO4AfhhN--MvSiUlJKWvxaCOcqOx-nSEk&callback=initMap"
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDO4AfhhN--MvSiUlJKWvxaCOcqOx-nSEk"
             type="text/javascript"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+
 
     <style>
         #mapdiv {
             margin: 0;
             padding: 0;
-            width: 500px;
-            height: 500px;
+            width: 200px;
+            height: 200px;
         }
     </style>
 </head>
@@ -38,32 +39,39 @@
         <div class="panel panel-info" style="margin: 0 auto; width: 50%; margin-top: 20px;">
             <div class="panel-heading">Encuesta OP</div>
             <div class="panel-body">
-                <div class="row">
-                   <div class="col-sm-6">
-                       <div class="form-group">
-                           <label>Nombre</label>
-                           <input type="text">
+                <form action="/nuevoRegistro" method="post" id="form">
+                    <div class="row">
+                       <div class="col-sm-4">
+                           <div class="form-group">
+                               <label>Nombre</label>
+                               <input type="text" class="input-sm" name="nombre">
+                           </div>
+                           <div class="form-group">
+                               <label>Sector</label>
+                               <input type="text" class="input-sm" name="sector">
+                           </div>
+                           <div class="form-group">
+                               <label>Nivel Escolar</label>
+                               <select name="educacion">
+                                   <option>Basico</option>
+                                   <option>Medio</option>
+                                   <option>Grado</option>
+                                   <option>Universitario</option>
+                                   <option>Postgrado</option>
+                                   <option>Doctorado</option>
+                               </select>
+                           </div>
+                           <div class="form-group">
+                              <p id = 'mapdiv'></p>
+                               <input type="text" id="lugar" name="lugar" hidden>
+
+                           </div>
+                           <div class="form-group">
+                               <input type="submit" id="btnSubmit" class="form-control" value="Registrar">
+                           </div>
                        </div>
-                       <div class="form-group">
-                           <label>Sector</label>
-                           <input type="text">
-                       </div>
-                       <div class="form-group">
-                           <label>Nivel Escolar</label>
-                           <select>
-                               <option>Basico</option>
-                               <option>Medio</option>
-                               <option>Grado</option>
-                               <option>Universitario</option>
-                               <option>Postgrado</option>
-                               <option>Doctorado</option>
-                           </select>
-                       </div>
-                       <div class="form-group">
-                           <p id = 'mapdiv'></p>
-                       </div>
-                   </div>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -86,19 +94,22 @@
         }
     }
 
+    function initMap() {console.log("ok");}
+
     function showPosition(position) {
         var googlePos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-
         var latlng = String(position.coords.latitude)+","+String(position.coords.longitude);
+
+        document.getElementById("lugar").value = latlng;
 
         var url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlng + "&sensor=false";
         $.getJSON(url, function (data) {
 
-                    var adress = data.results[1].formatted_address;
-                    document.getElementById("lugar").value = adress;
+
+                    //document.getElementById("lugar").value = data.results[1].formatted_address;
                 }
-        )
+        );
 
         var mapOptions = {
             zoom : 12,
