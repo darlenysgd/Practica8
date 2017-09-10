@@ -14,7 +14,7 @@
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
 
-
+    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
 
 
     <script href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -41,18 +41,18 @@
             <div class="panel-body">
                 <form action="/nuevoRegistro" method="post" id="form">
                     <div class="row">
-                       <div class="col-sm-4">
+                       <div class="col-sm-12">
                            <div class="form-group">
                                <label>Nombre</label>
-                               <input type="text" class="input-sm" name="nombre">
+                               <input type="text" class="input-sm form-control" id="nombre" name="nombre">
                            </div>
                            <div class="form-group">
                                <label>Sector</label>
-                               <input type="text" class="input-sm" name="sector">
+                               <input type="text" class="input-sm form-control" id="sector" name="sector">
                            </div>
                            <div class="form-group">
                                <label>Nivel Escolar</label>
-                               <select name="educacion">
+                               <select class="form-control" id="educacion" name="educacion">
                                    <option>Basico</option>
                                    <option>Medio</option>
                                    <option>Grado</option>
@@ -62,7 +62,7 @@
                                </select>
                            </div>
                            <div class="form-group">
-                              <p id = 'mapdiv'></p>
+                              <div id = 'mapdiv' ></div>
                                <input type="text" id="lugar" name="lugar" hidden>
 
                            </div>
@@ -77,7 +77,49 @@
     </div>
 </body>
 
+<script>
 
+    $(document).ready(function(){
+
+
+        var db = new Dexie('MyDatabase');
+
+// Definimos un esquema (tabla) y sus campos
+        db.version(1)
+                .stores({
+                    encuesta: 'nombre, sector, educacion, lugar'
+                });
+
+// Abrimos la base de datos
+        db.open()
+                .catch(function (error) {
+                    alert('Oh no! : ' + error);
+                });
+
+
+        $("#form").on('submit', function (e) {
+            e.preventDefault();
+
+            var nombre = $("#nombre").val();
+            var sector = $("#sector").val();
+            var educacion = $("#educacion").val();
+            var lugar = $("#lugar").val();
+
+            db.encuesta
+                    .add({
+                        nombre: sector,
+                        sector: educacion,
+                        educacion: educacion,
+                        lugar: lugar
+                    });
+            //stop form from submitting
+
+        });
+
+
+
+    })
+</script>
 
 <script>
     var watchId = null;
@@ -124,6 +166,15 @@
             title : 'Hi , I am here',
             animation : google.maps.Animation.DROP
         };
+
+
+        window.onresize = function() {
+            var currCenter = googleMap.getCenter();
+            google.maps.event.trigger(googleMap, 'resize');
+            googleMap.setCenter(currCenter);
+        };
+
+
         var googleMarker = new google.maps.Marker(markerOpt);
         var geocoder = new google.maps.Geocoder();
         geocoder.geocode({

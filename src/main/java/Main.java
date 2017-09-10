@@ -40,7 +40,7 @@ public class Main {
         }, freeMarkerEngine);
 
 
-        post("/nuevoRegistro", (request, response) -> {
+       /* post("/nuevoRegistro", (request, response) -> {
 
             Registro registro = new Registro();
 
@@ -56,7 +56,7 @@ public class Main {
 
             Map<String, Object> attributes = new HashMap<>();
             return new ModelAndView(attributes, "Form.ftl");
-        }, freeMarkerEngine);
+        }, freeMarkerEngine);*/
 
     }
 
