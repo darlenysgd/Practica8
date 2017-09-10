@@ -39,6 +39,12 @@ public class Main {
 
         }, freeMarkerEngine);
 
+        get("/infoServidor", (request, response) -> {
+
+            Map<String, Object> attributes = new HashMap<>();
+            return new ModelAndView(attributes, "infoServidor.ftl");
+
+        }, freeMarkerEngine);
 
        /* post("/nuevoRegistro", (request, response) -> {
 

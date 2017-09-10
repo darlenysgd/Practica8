@@ -29,120 +29,39 @@
         #mapdiv {
             margin: 0;
             padding: 0;
-            height: 200px;
+            height: 100px;
         }
     </style>
 </head>
 <body onload="geoloc()">
-    <div class="row col-sm-18">
-        <div class="panel panel-info" style="margin: 0 auto; width: 50%; margin-top: 20px;">
-            <div class="panel-heading">Encuesta OP</div>
-            <div class="panel-body">
-                <form action="/nuevoRegistro" method="post" id="form">
-                    <div class="row">
-                       <div class="col-sm-12">
-                           <div class="form-group">
-                               <label>Nombre</label>
-                               <input type="text" class="input-sm form-control" id="nombre" name="nombre">
-                           </div>
-                           <div class="form-group">
-                               <label>Sector</label>
-                               <input type="text" class="input-sm form-control" id="sector" name="sector">
-                           </div>
-                           <div class="form-group">
-                               <label>Nivel Escolar</label>
-                               <select class="form-control" id="educacion" name="educacion">
-                                   <option>Basico</option>
-                                   <option>Medio</option>
-                                   <option>Grado</option>
-                                   <option>Universitario</option>
-                                   <option>Postgrado</option>
-                                   <option>Doctorado</option>
-                               </select>
-                           </div>
-                           <div class="form-group">
-                              <div id = 'mapdiv' ></div>
-                               <input type="text" id="lugar" name="lugar" hidden>
+<div class="row col-sm-12">
+    <div class="panel panel-info" style="margin: 0 auto; width: 50%; margin-top: 20px;">
+        <div class="panel-heading">Datos Servidor</div>
+        <div class="panel-body">
+            <table style="width:100%">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Sector</th>
+                    <th>Nivel Escolar</th>
+                    <th>Ubicacion</th>
+                </tr>
+                <tr>
+                    <td>Isaac Perez</td>
+                    <td>Las Dianas</td>
+                    <td>Universitario</td>
+                    <td>
+                        <div id = 'mapdiv' ></div>
+                        <input type="text" id="lugar" name="lugar" hidden>
+                     </td>
+                </tr>
 
-                           </div>
-                           <div class="form-group">
-                               <input type="submit" id="btnSubmit" class="form-control" value="Registrar">
-                           </div>
-                       </div>
-                    </div>
-                </form>
-            </div>
+            </table>
+
         </div>
     </div>
+</div>
 </body>
 
-<script>
-
-    $(document).ready(function(){
-
-        var db = new Dexie('MyDatabase');
-        var nombre;
-        var sector;
-        var lugar;
-        var educacion;
-
-        db.version(1)
-                .stores({
-                    encuesta: 'nombre, sector, educacion, lugar'
-                });
-
-        db.open()
-                .catch(function (error) {
-                    alert('Oh no! : ' + error);
-                });
-
-
-        $("#form").on('submit', function (e) {
-            e.preventDefault();
-
-            nombre = $("#nombre").val();
-            sector = $("#sector").val();
-            educacion = $("#educacion").val();
-            lugar = $("#lugar").val();
-
-            if (navigator.onLine) {
-                alert("Es mayor que cero");
-                    db.encuesta.orderBy("nombre")
-                            .reverse()
-                            .limit(3)
-                            .toArray()
-                            .then(function (results) {
-                                //parsear Resultados y subirlos al servidor
-                            });
-                    //db.encuesta.clear();
-
-                //subir datos al servidor
-
-            }else {
-
-
-                db.encuesta
-                        .add({
-                            nombre: nombre,
-                            sector: sector,
-                            educacion: educacion,
-                            lugar: lugar
-                        });
-
-            }
-
-
-
-        });
-
-
-
-
-
-
-
-    });
-</script>
 
 <script>
     var watchId = null;
