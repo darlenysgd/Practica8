@@ -47,6 +47,7 @@
         var db = new Dexie('MyDatabase');
         var ul=document.createElement('ul');
 
+
         db.version(1)
                 .stores({
                     encuesta: '++id, nombre, sector, educacion, lugar'
@@ -57,6 +58,7 @@
                 .catch(function (error) {
                     alert('Oh no! : ' + error);
                 });
+
 
       /*  db.encuesta.get(1, function (firstFriend) {
             alert ("Encuesta with id 1: " + JSON.stringify(firstFriend));
@@ -97,14 +99,28 @@
 
 
 
-            if (!navigator.onLine) {
+        if (!navigator.onLine) {
 
               alert("No hay internet disponible para sincronizar");
 
             }
 
 
+        var deleteLink = document.querySelectorAll('.eliminar');
+        var editLink = document.getElementsByClassName('.editar');
 
+
+        for (var j = 0; j < deleteLink.length; j++) {
+            deleteLink[j].addEventListener('click', function(event) {
+                console.log("Clickeaste en " + this.id);
+            });
+        }
+
+        for (var k = 0; k < editLink.length; k++) {
+            editLink[k].addEventListener('click', function(event) {
+                console.log("Clickeaste en " + this.id);
+            });
+        }
 
 
 
