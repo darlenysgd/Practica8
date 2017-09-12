@@ -46,6 +46,14 @@ public class Main {
 
         }, freeMarkerEngine);
 
+        get("/Sincronizar", (request, response) -> {
+
+            Map<String, Object> attributes = new HashMap<>();
+            return new ModelAndView(attributes, "sincronizarConServidor.ftl");
+
+        }, freeMarkerEngine);
+
+
        /* post("/nuevoRegistro", (request, response) -> {
 
             Registro registro = new Registro();

@@ -80,15 +80,20 @@
 
     $(document).ready(function(){
 
+
+
+        //Dexie.delete('MyDatabase');
+
         var db = new Dexie('MyDatabase');
         var nombre;
         var sector;
         var lugar;
         var educacion;
 
+
         db.version(1)
                 .stores({
-                    encuesta: 'nombre, sector, educacion, lugar'
+                    encuesta: '++id, nombre, sector, educacion, lugar'
                 });
 
         db.open()
@@ -106,15 +111,23 @@
             lugar = $("#lugar").val();
 
             if (navigator.onLine) {
-                alert("Es mayor que cero");
-                    db.encuesta.orderBy("nombre")
+
+
+                db.encuesta
+                        .add({
+                            nombre: nombre,
+                            sector: sector,
+                            educacion: educacion,
+                            lugar: lugar
+                        });
+                    db.encuesta.orderBy("id")
                             .reverse()
-                            .limit(3)
                             .toArray()
                             .then(function (results) {
+                                console.log(JSON.stringify(results));
                                 //parsear Resultados y subirlos al servidor
                             });
-                    //db.encuesta.clear();
+                    //Dexie.delete('MyDatabase');
 
                 //subir datos al servidor
 
