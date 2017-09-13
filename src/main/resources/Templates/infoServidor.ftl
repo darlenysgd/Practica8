@@ -35,6 +35,20 @@
     </style>
 </head>
 <body onload="geoloc()">
+<div id="custom-bootstrap-menu" class="navbar navbar-default " role="navigation">
+    <div class="container-fluid">
+
+        <div class="collapse navbar-collapse navbar-menubuilder">
+            <ul class="nav navbar-nav navbar-left">
+                <li><a href="/Formulario">Encuesta</a>
+                </li>
+                <li><a href="/Sincronizar">Sincronizar</a>
+                </li>
+                <li><a href="/infoServidor">Datos servidor</a>
+            </ul>
+        </div>
+    </div>
+</div>
 <div class="row col-sm-12">
     <div class="panel panel-info" style="margin: 0 auto; width: 50%; margin-top: 20px;">
         <div class="panel-heading">Datos Servidor</div>

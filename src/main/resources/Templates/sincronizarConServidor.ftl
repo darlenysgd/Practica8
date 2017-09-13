@@ -28,6 +28,20 @@
 
 </head>
 <body>
+<div id="custom-bootstrap-menu" class="navbar navbar-default " role="navigation">
+    <div class="container-fluid">
+
+        <div class="collapse navbar-collapse navbar-menubuilder">
+            <ul class="nav navbar-nav navbar-left">
+                <li><a href="/Formulario">Encuesta</a>
+                </li>
+                <li><a href="/Sincronizar">Sincronizar</a>
+                </li>
+                <li><a href="/infoServidor">Datos servidor</a>
+            </ul>
+        </div>
+    </div>
+</div>
 <div class="row col-sm-12">
     <div class="panel panel-info" style="margin: 0 auto; width: 50%; margin-top: 20px;">
         <div class="panel-heading">Sincronizar</div>
@@ -108,13 +122,20 @@
         $(document).on('click', '.eliminar', function(){
             var esto = this;
 
-            db.open().then( function () {
-                db.encuesta.where("id").equals(esto.id).delete();
-            });
+            db.encuesta.delete(this.id);
+
+             db.encuesta.where("id").equals(this.id).delete();
+
 
             var list = document.getElementById(this.id);   // Get the <ul> element with id="myList"
             list.parentNode.removeChild(list);
 
+
+
+        });
+
+        $(document).on('click', '.editar', function(){
+            window.location.replace("http://localhost:4567/Editar/"+this.id);
 
 
         });
@@ -129,15 +150,16 @@
                     .toArray()
                     .then(function (results) {
                         restClient.create("/listadoBD", results).done(function (response) {
-                            console.log("REST call succeeded", response);
+                            alert("Sincronizado Correctamente");
                             Dexie.delete('MyDatabase');
+                            location.reload();
 
-                            });
+                            }).fail(function () {
+                           alert("Error al sincronizar");
+                        });
 
-                        }).fail(function () {
-                                    console.log("Que vaina", arguments);
-                                });
 
+                    });
 
 
         });

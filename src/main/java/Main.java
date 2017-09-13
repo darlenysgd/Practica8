@@ -54,23 +54,17 @@ public class Main {
         }, freeMarkerEngine);
 
 
-       /* post("/nuevoRegistro", (request, response) -> {
-
-            Registro registro = new Registro();
-
-            registro.setNombre(request.queryParams("nombre"));
-
-
-            registro.setSector(request.queryParams("sector"));
-            registro.setNivelEscolar(request.queryParams("educacion"));
-
-            registro.setUbicacion(request.queryParams("lugar"));
-
-           registros.add(registro);
+        get("/Editar/:id", (request, response) -> {
 
             Map<String, Object> attributes = new HashMap<>();
-            return new ModelAndView(attributes, "Form.ftl");
-        }, freeMarkerEngine);*/
+            int id = Integer.parseInt(request.params("id"));
+            attributes.put("id", id);
+            return new ModelAndView(attributes, "editar.ftl");
+
+        }, freeMarkerEngine);
+
+
+
 
     }
 
