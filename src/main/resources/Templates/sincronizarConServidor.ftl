@@ -60,13 +60,7 @@
                 });
 
 
-      /*  db.encuesta.get(1, function (firstFriend) {
-            alert ("Encuesta with id 1: " + JSON.stringify(firstFriend));
-        });*/
-
         db.encuesta.orderBy("id")
-                .reverse()
-                .limit(3)
                 .toArray()
                 .then(function (results) {
                     console.log(JSON.stringify(results));
@@ -106,24 +100,19 @@
             }
 
 
-        var deleteLink = document.querySelectorAll('.eliminar');
-        var editLink = document.getElementsByClassName('.editar');
+        $(document).on('click', '.eliminar', function(){
+            var esto = this;
 
-
-        for (var j = 0; j < deleteLink.length; j++) {
-            deleteLink[j].addEventListener('click', function(event) {
-                console.log("Clickeaste en " + this.id);
+            db.open().then( function () {
+                db.encuesta.where("id").equals(esto.id).delete();
             });
-        }
 
-        for (var k = 0; k < editLink.length; k++) {
-            editLink[k].addEventListener('click', function(event) {
-                console.log("Clickeaste en " + this.id);
-            });
-        }
+            var list = document.getElementById(this.id);   // Get the <ul> element with id="myList"
+            list.parentNode.removeChild(list);
 
 
 
+        });
 
 
 

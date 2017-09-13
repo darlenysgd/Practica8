@@ -15,6 +15,7 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
 
     <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+    <script src="/JS/everest.min.js"></script>
 
 
     <script href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -29,7 +30,7 @@
         #mapdiv {
             margin: 0;
             padding: 0;
-            height: 100px;
+            height: 200px;
         }
     </style>
 </head>
@@ -37,31 +38,52 @@
 <div class="row col-sm-12">
     <div class="panel panel-info" style="margin: 0 auto; width: 50%; margin-top: 20px;">
         <div class="panel-heading">Datos Servidor</div>
-        <div class="panel-body">
-            <table style="width:100%">
-                <tr>
-                    <th>Nombre</th>
-                    <th>Sector</th>
-                    <th>Nivel Escolar</th>
-                    <th>Ubicacion</th>
-                </tr>
-                <tr>
-                    <td>Isaac Perez</td>
-                    <td>Las Dianas</td>
-                    <td>Universitario</td>
-                    <td>
-                        <div id = 'mapdiv' ></div>
-                        <input type="text" id="lugar" name="lugar" hidden>
-                     </td>
-                </tr>
+        <div id="tablediv" class="panel-body" >
 
-            </table>
 
+            <div id = 'mapdiv' ></div>
         </div>
     </div>
 </div>
 </body>
 
+<script>
+    $(document).ready(function () {
+
+        var ul=document.createElement('ul');
+        var loc;
+        var restClient = ê.createRestClient({
+            host: "localhost:1234"
+
+        });
+
+        restClient.read("/Registros")
+                .done(function (response) {
+                    //console.log("REST call succeeded", response);
+
+                    var arr = JSON.parse(response.toString());
+                    for(var i=0;i<arr.length;i++)
+                    {
+                        var li=document.createElement('li');
+                        var texto = document.createElement('h5');
+                        var mapa = document.createElement('div');
+                        mapa.className="mapdiv";
+
+                        texto.innerHTML=arr[i].nombre+ " " + arr[i].sector+ " " + arr[i].educacion+ " " + arr[i].lugar;
+                        li.appendChild(texto);
+                        li.appendChild(mapa);
+                        ul.appendChild(li);
+
+                    }
+                    document.getElementById('tablediv').appendChild(ul);
+                })
+                .fail(function () {
+                    console.log("Que vaina", arguments);
+                });
+    });
+
+
+</script>
 
 <script>
     var watchId = null;
@@ -85,7 +107,6 @@
 
         var latlng = String(position.coords.latitude)+","+String(position.coords.longitude);
 
-        document.getElementById("lugar").value = latlng;
 
         var url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlng + "&sensor=false";
         $.getJSON(url, function (data) {
@@ -102,12 +123,7 @@
         };
         var mapObj = document.getElementById('mapdiv');
         var googleMap = new google.maps.Map(mapObj, mapOptions);
-        var markerOpt = {
-            map : googleMap,
-            position : googlePos,
-            title : 'Hi , I am here',
-            animation : google.maps.Animation.DROP
-        };
+
 
 
         window.onresize = function() {
@@ -117,7 +133,41 @@
         };
 
 
-        var googleMarker = new google.maps.Marker(markerOpt);
+
+
+
+
+
+        var restClient = ê.createRestClient({
+            host: "localhost:1234"
+
+        });
+
+        restClient.read("/Registros")
+                .done(function (response) {
+                    //console.log("REST call succeeded", response);
+
+                    var arr = JSON.parse(response.toString());
+                    for(var i=0;i<arr.length;i++)
+                    {
+
+                        var lat = getLatLngFromString(arr[i].lugar);
+                        var markerOpt = {
+                            map : googleMap,
+                            position : lat,
+                            title : arr[i].lugar,
+                            animation : google.maps.Animation.DROP
+                        };
+                        var googleMarker = new google.maps.Marker(markerOpt);
+
+
+                    }
+
+                })
+                .fail(function () {
+                    console.log("Que vaina", arguments);
+                });
+
         var geocoder = new google.maps.Geocoder();
         geocoder.geocode({
             'latLng' : googlePos
@@ -141,6 +191,10 @@
         });
     }
 
+    function getLatLngFromString(ll) {
+        var latlng = ll.split(/, ?/)
+        return new google.maps.LatLng(parseFloat(latlng[0]), parseFloat(latlng[1]));
+    }
 
 
     function showError(error) {
