@@ -51,6 +51,7 @@
     $(document).ready(function () {
 
         var ul=document.createElement('ul');
+        ul.className = "list-group"
         var loc;
         var restClient = ê.createRestClient({
             host: "localhost:1234"
@@ -64,7 +65,8 @@
                     var arr = JSON.parse(response.toString());
                     for(var i=0;i<arr.length;i++)
                     {
-                        var li=document.createElement('li');
+                        var li=document.createElement('li')
+                        li.className = "list-group-item";
                         var texto = document.createElement('h5');
                         var mapa = document.createElement('div');
                         mapa.className="mapdiv";

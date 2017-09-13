@@ -15,6 +15,7 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
 
     <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+    <script src="/JS/everest.min.js"></script>
 
 
     <script href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -37,7 +38,9 @@
 
 
         </div>
+        <button id="sync" class="form-control btn btn-primary">Sincronizar</button>
     </div>
+
 </div>
 </body>
 <script>
@@ -46,6 +49,7 @@
 
         var db = new Dexie('MyDatabase');
         var ul=document.createElement('ul');
+        ul.className = "list-group"
 
 
         db.version(1)
@@ -67,15 +71,16 @@
                     for(var i = 0; i < results.length; i++){
 
                         var li=document.createElement('li');
+                        li.className = "list-group-item";
                         var botonEliminar = document.createElement('button');
                         botonEliminar.innerHTML="Eliminar";
                         botonEliminar.id = results[i].id;
-                        botonEliminar.className = 'eliminar';
+                        botonEliminar.className = 'eliminar btn btn-danger';
                         var botonEditar = document.createElement('button');
                         botonEditar.innerHTML = "Editar";
                         botonEditar.id = results[i].id;
-                        botonEditar.className = 'editar';
-                        var texto = document.createElement('h5');
+                        botonEditar.className = 'editar btn btn-success';
+                        var texto = document.createElement('p');
                         texto.innerHTML=results[i].nombre+ " " + results[i].sector+ " " + results[i].educacion+ " " + results[i].lugar;
                         li.id= results[i].id;
                         li.appendChild(texto);
@@ -113,6 +118,30 @@
 
 
         });
+
+        var restClient = ê.createRestClient({
+            host: "localhost:1234"
+
+        });
+
+        $(document).on('click', '#sync', function(){
+            db.encuesta.orderBy("id")
+                    .toArray()
+                    .then(function (results) {
+                        restClient.create("/listadoBD", results).done(function (response) {
+                            console.log("REST call succeeded", response);
+                            Dexie.delete('MyDatabase');
+
+                            });
+
+                        }).fail(function () {
+                                    console.log("Que vaina", arguments);
+                                });
+
+
+
+        });
+
 
 
 

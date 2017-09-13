@@ -144,7 +144,7 @@
 
             }
 
-
+            location.reload();
 
         });
 
